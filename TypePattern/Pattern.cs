@@ -1,3 +1,4 @@
+using System.Data;
 using System.Reflection.Metadata.Ecma335;
 
 namespace TypePattern;
@@ -8,10 +9,9 @@ public class Pattern
 
     public Pattern WaitFor(ICharGroup? cg = null)
     {
-        if (_groupValues != null)
-        {
-            throw new InvalidOperationException("Method can only be called on first chain.");
-        }
+        if (_groupValues is not null) { throw new InvalidOperationException(
+            "Method can only be called on first chain."); }
+        
         var clone = GetCloneOfThis();
         cg ??= new CharGroup().Wildcard();
         clone._groupValues = [new CharGroupLogic(cg)];
@@ -35,16 +35,14 @@ public class Pattern
     private Pattern GetCloneOfThis()
     {
         var clone = new Pattern
-        {
-            _groupValues = _groupValues,
-        };
+        { _groupValues = _groupValues, };
         return clone;
     }
 
     private void PushValue(ICharGroup cg, bool isRequired = true)
     {
         var cgl = new CharGroupLogic(cg, isRequired);
-        if (_groupValues == null)
+        if (_groupValues is null)
         {
             var wildcardLogic = new CharGroupLogic(new CharGroup().Wildcard());
             _groupValues = new[] { wildcardLogic, cgl };
@@ -59,10 +57,7 @@ public class Pattern
 
     public CharGroupLogic[] ExtractAll()
     {
-        if (_groupValues != null)
-        {
-            return _groupValues;
-        }
+        return _groupValues ??
         throw new NullReferenceException("Pattern contains no logic to extract.");
     }
     public record CharGroupLogic(ICharGroup CharGroup, bool RequiredForMatch=true,  

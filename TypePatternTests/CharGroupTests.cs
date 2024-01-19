@@ -1,9 +1,10 @@
 using TypePattern;
 namespace TypePatternTests;
 
+[TestFixture]
 public class CharGroupTests
 {
-    private CharGroup _letter;
+    private CharGroup? _letter;
     private CharGroup _number;
     
     [SetUp]
